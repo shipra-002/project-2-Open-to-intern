@@ -1,48 +1,127 @@
-# Promise has typically 3 states
-- Pending : not awaited and hence has not completed yet ( e.g. typically when you dont await an axios or db call)
-- Rejected: When promise failed ( wrong url | server down etc)
-- Fulfilled: Promise completed succesfully (e.g. db call has completed and returned a result succesfully)
-// - settled : referes to a combination of either rejhected or fulfilled
+# Thorium
+
+## Open to Intern Project Requirement
+
+### Key points
+- Create a group database `groupXDatabase`. You can clean the db you previously used and resue that.
+- This time each group should have a *single git branch*. Coordinate amongst yourselves by ensuring every next person pulls the code last pushed by a team mate. You branch will be checked as part of the demo. Branch name should follow the naming convention `project/internshipGroupX`
+- Follow the naming conventions exactly as instructed. The backend code will be integrated with the front-end application which means any mismatch in the expected request body will lead to failure in successful integration.
+
+### Models
+- College Model
+```
+{ name: { mandatory, unique, example iith}, fullName: {mandatory, example `Indian Institute of Technology, Hyderabad`}, logoLink: {mandatory}, isDeleted: {boolean, default: false} }
+```
+- Intern Model
+```
+{ name: {mandatory}, email: {mandatory, valid email, unique}, mobile: {mandatory, valid mobile number, unique}, collegeId: {ObjectId, ref to college model, isDeleted: {boolean, default: false}}
+```
+
+### POST /functionup/colleges
+- Create a college - a document for each member of the group
+- The logo link will be provided to you by the mentors. This link is a s3 (Amazon's Simple Service) url. Try accessing the link to see if the link is public or not.
+
+  `Endpoint: BASE_URL/functionup/colleges`
+
+### POST /functionup/interns
+- Create a document for an intern. 
+- Also save the collegeId along with the document. Your request body contains the following fields - { name, mobile, email, collegeName}
+- Return HTTP status 201 on a succesful document creation. Also return the document. The response should be a JSON object like [this](#successful-response-structure) 
+
+- Return HTTP status 400 for an invalid request with a response body like [this](#error-response-structure)
+
+### GET /functionup/collegeDetails
+- Returns the college details for the requested college (Expect a query parameter by the name `collegeName`. This is anabbreviated college name. For example `iith`)
+- Returns the list of all interns who have applied for internship at this college.
+- The response structure should look like [this](#college-details)
 
 
-# What is a promise:
-- layman's definition: It is something in JS that tells us whether an operation has completed or not (pending)
-- technical definition: it is a JS object that represents whether an asynchronous operation(like db or axios call) is completed or not
+## Testing 
+- To test these apis create a new collection in Postman named Project 2 Internship
+- Each api should have a new request in this collection
+- Each request in the collection should be rightly named. Eg Create college, Get college details etc
+- Each member of each team should have their tests in running state
 
 
+Refer below sample
 
+ ![A Postman collection and request sample](assets/Postman-collection-sample.png)
 
+## Response
 
-// GIT link..go thourgh this code thoroughly..it will result in a confusion when you are going though the code- postman se hit kar rhe hai and same axios se bhi hit kar rhe hai ..why?
-// a short video ..4-5 mins  summary on what we covered today
-// An asignment :
-1.  WRITE A GET API TO GET THE LIST OF ALL THE "vaccination sessions by district id" for any given district id and for any given date
-2.  GOTO  http://api.openweathermap.org => “subscribe” current weather data ==> get api key for Free version ==> create new account and Verify your emailId( Must verify to avoid issues) => go to My APi keys under your account name(top right corner) or https://home.openweathermap.org/api_keys => save the key/appid somewhere. Now proceed further
-Create API's to do each of the following:
-                    - get weather of London from http://api.openweathermap.org/data/2.5/weather?q=London&appid=<useYourOwnAppId>  (NOTE: must use HTTP infront of the url else axios will attempt to hit localhost and give error  ..also use HTTP only and not HTTPS)
-                    - then change the above to get the temperature only( of London)
-                    - Sort the cities  ["Bengaluru","Mumbai", "Delhi", "Kolkata", "Chennai", "London", "Moscow"] in order of their increasing temperature
-                    result should look something like this
-                    [
-                    {city:"London", temp: 280},
-                    {city:"Moscow", temp: 290},
-                    {city:"Bangalore", temp: 301.2},
-                    .......
-                    ]
+### Successful Response structure
+```yaml
+{
+  status: true,
+  data: {
 
-3. Axios POST request assignment
+  }
+}
+```
+### Error Response structure
+```yaml
+{
+  status: false,
+  message: ""
+}
+```
 
-            1. Get all the memes at Postman (https://api.imgflip.com/get_memes)
-            2. Pick a memeId you want (Eg 129242436) for the POST request
-            3. Create a Post request (https://api.imgflip.com/caption_image) with only query params. Following are the params (copy username and password exactly as given below):
-            template_id <meme_id>
-            text0 <text you want as a caption>
-            text1 <optional>
-            username chewie12345
-            password meme@123
+## Collections samples
 
-            4. Return a response with a body like this
-            "data": {
-                    "url": "https://i.imgflip.com/5mvxax.jpg",
-                    "page_url": "https://imgflip.com/i/5mvxax"
-                }
+#### College
+```yaml
+{
+    "name" : "iith",
+    "fullName" : "Indian Institute of Technology, Hyderabad",
+    "logoLink" : "https://functionup.s3.ap-south-1.amazonaws.com/colleges/iith.png",
+    "isDeleted" : false
+}
+```
+#### Intern
+```yaml
+   {
+    "isDeleted" : false,
+    "name" : "Jane Does",
+    "email" : "jane.doe@iith.in",
+    "mobile" : "90000900000",
+    "collegeId" : ObjectId("888771129c9ea621dc7f5e3b")
+}
+```
+## Response samples
+
+### College details
+```yaml
+{
+  "data": {
+    "name": "xyz",
+    "fullName": "Some Institute of Engineering and Technology",
+    "logoLink": "some public s3 link for a college logo",
+    "interests": [
+      {
+        "_id": "123a47301a53ecaeea02be59",
+        "name": "Jane Doe",
+        "email": "jane.doe@miet.ac.in",
+        "mobile": "8888888888"
+      },
+      {
+        "_id": "45692c0e1a53ecaeea02b1ac",
+        "name": "John Doe",
+        "email": "john.doe@miet.ac.in",
+        "mobile": "9999999999"
+      },
+      {
+        "_id": "7898d0251a53ecaeea02a623",
+        "name": "Sukruti",
+        "email": "dummy.email@miet.ac.in",
+        "mobile": "9191919191"
+      },
+      {
+        "_id": "999803da1a53ecaeea02a07e",
+        "name": "Neeraj Kumar",
+        "email": "another.example@miet.ac.in",
+        "mobile": "9898989898"
+      }
+    ]
+  }
+}
+```
