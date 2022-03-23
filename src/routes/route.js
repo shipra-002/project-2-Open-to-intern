@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-//const CowinController= require("../controllers/cowinController")
 
 const collegeController=require('../controllers/collegeController')
+const internController= require('../controllers/internController')
 
 
 
@@ -10,34 +10,26 @@ router.get("/test-me", function (req, res) {
     res.send("My first ever api!")
 })
 
-router.post("/createCollege",collegeController.createcollege)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// router.get("/cowin/states", CowinController.getStates)
-// router.get("/cowin/districtsInState/:stateId", CowinController.getDistricts)
-// router.get("/cowin/getByPin", CowinController.getByPin)
-
-// router.post("/cowin/getOtp", CowinController.getOtp)
-
-// WRITE A GET API TO GET THE LIST OF ALL THE "vaccination sessions by district id" for any given district id and for any given date
-
-
+router.post("/createCollege",collegeController.createCollege)
+router.post("/createIntern",internController.createIntern)
+router.get('/getCollege',internController.getCollege)
 
 module.exports = router;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

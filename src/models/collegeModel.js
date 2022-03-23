@@ -1,18 +1,20 @@
 const mongoose=require("mongoose")
+const validator = require('email-validator')
 
-const collegeModel=new mongoose.Schema({
+const collegeSchema=new mongoose.Schema({
     name:{
         type:String,
-        required:true,
+        required:"name is required",
         unique:true,
-        lowercase:true
+        lowercase:true,
+        trim:true
     },
     fullName:{
         type:String,
-        required:true,
+        required:"fullname is required"
 
     },
-    logoLink:{
+    logolink:{
         type:String,
         required:true
     },
@@ -26,5 +28,5 @@ const collegeModel=new mongoose.Schema({
 
 
 
-module.exports=mongoose.model('college',collegeModel)
+module.exports=mongoose.model('college',collegeSchema)
 

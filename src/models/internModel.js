@@ -2,7 +2,7 @@ const mongoose=require('mongoose')
 
 const ObjectId=mongoose.Schema.Types.ObjectId
 
-const internModel=new mongoose.Schema({
+const internSchema=new mongoose.Schema({
     name:String,
     email: {
         type: String,
@@ -19,9 +19,19 @@ const internModel=new mongoose.Schema({
 
     },
     mobile:{
-        type:"Number",
+        type:String,
         required:true,
-        unique:true
+        unique:true,
+        validate: {
+            validator: function (mobile) {
+                return /^([+]\d{2})?\d{10}$/.test(mobile)
+            },
+            message: "enter valid Mobile Number",
+
+        }
+       // pattern : "1?\W*([2-9][0-8][0-9])\W*([2-9][0-9]{2})\W*([0-9]{4})(\se?x?t?(\d*))?"
+
+    
     },
     collegeId:{
         type:ObjectId,
@@ -36,4 +46,4 @@ const internModel=new mongoose.Schema({
 },
 {timestamps:true})
 
-module.exports=new mongoose.model("intern",internModel)
+module.exports=new mongoose.model("intern",internSchema)
